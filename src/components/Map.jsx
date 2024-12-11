@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 export const Map = (props) => {
-    const {setInstructions, setPlace, setReasons, setClearPosition, speak} = props;
+    const {setInstructions, setPlace, setReasons, speak, clearMove} = props;
 
     const classRoomSet = () => {
         speak("classroom");
@@ -14,7 +14,7 @@ export const Map = (props) => {
           {id: "r3", ja: "先生と話すこと", en: "I like talking with my teacher."},
           {id: "r4", ja: "勉強", en: "I like studying."}
         ]);
-        setClearPosition(10);
+        clearMove(10);
     }
     const EnglishRoomSet = () => {
         speak("English room");
@@ -26,7 +26,7 @@ export const Map = (props) => {
             {id: "r2", ja: "英語の歌を歌うこと", en: "I like singing English songs."},
             {id: "r3", ja: "英語の先生", en: "I like my English teacher."}
         ]);
-        setClearPosition(11);
+        clearMove(11);
     }
     const cookingRoomSet = () => {
         speak("cooking room");
@@ -36,7 +36,7 @@ export const Map = (props) => {
             {id: "r0", ja: "料理をすること", en: "I like cooking."},
             {id: "r1", ja: "食べること", en: "I like eating."}
         ]);
-        setClearPosition(14);
+        clearMove(14);
     }
     const computerRoomSet = () => {
         speak("computer room");
@@ -47,7 +47,7 @@ export const Map = (props) => {
             {id: "r1", ja: "プログラミング", en: "I like programming."},
             {id: "r2", ja: "タイピング", en: "I like typing."}
         ]);
-        setClearPosition(15);
+        clearMove(15);
     }
     const musicRoomSet = () => {
         speak("music room");
@@ -58,7 +58,7 @@ export const Map = (props) => {
             {id: "r1", ja: "歌を歌うこと", en: "I like singing songs."},
             {id: "r2", ja: "リコーダーを演奏すること", en: "I like playing the recorder."}
         ]);
-        setClearPosition(12);
+        clearMove(12);
     }
     const artsAndCraftsRoomSet = () => {
         speak("arts and crafts room");
@@ -69,7 +69,7 @@ export const Map = (props) => {
             {id: "r1", ja: "絵をかくこと", en: "I like painting."},
             {id: "r2", ja: "おりがみ", en: "I like origami."}
         ]);
-        setClearPosition(13);
+        clearMove(13);
     }
     const scienceRoomSet = () => {
         speak("science room");
@@ -81,7 +81,7 @@ export const Map = (props) => {
             {id: "r2", ja: "生物", en: "I like animals."},
             {id: "r3", ja: "魚", en: "I like fish."}
         ]);
-        setClearPosition(16);
+        clearMove(16);
     }
     const gymSet = () => {
         speak("gym");
@@ -93,7 +93,7 @@ export const Map = (props) => {
             {id: "r2", ja: "走ること", en: "I like running."},
             {id: "r3", ja: "友だちと遊ぶこと", en: "I like playing with my friends."}
         ]);
-        setClearPosition(4);
+        clearMove(4);
     }
     const schoolNursesOfficeSet = () => {
         speak("school nurse's office");
@@ -103,7 +103,7 @@ export const Map = (props) => {
             {id: "r0", ja: "保健室の先生", en: "I like the school nurse."},
             {id: "r1", ja: "保健室の先生とお話しすること", en: "I like talking with the school nurse."}
         ]);
-        setClearPosition(5);
+        clearMove(5);
     }
     const librarySet = () => {
         speak("library");
@@ -113,7 +113,7 @@ export const Map = (props) => {
             {id: "r0", ja: "本", en: "I like books."},
             {id: "r1", ja: "読書", en: "I like reading."}
         ]);
-        setClearPosition(6);
+        clearMove(6);
     }
     useEffect(() => {
         const rooms = document.querySelectorAll("rect");

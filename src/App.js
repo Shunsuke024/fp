@@ -11,11 +11,18 @@ export const App = () => {
   const [reasons, setReasons] = useState([]);
   const [place, setPlace] = useState("This is my favorite place, the ~.");
   const [sentences, setSentences] = useState([]);
-  const [changeMap, setChangeMap] = useState(false);
+  const [changeMap, setChangeMap] = useState(true);
   const [isGuide, setIsGuide] = useState(false);
   const [guide, setGuide] = useState([]);
-  const [clearPosition, setClearPosition] = useState(10);
   const [guideSentence, setGuideSentence] = useState([]);
+  const [clearPosition, setClearPosition] = useState(10);
+  const [clearMoves, setClearMoves] = useState({
+    0: { up: 1 },
+    1: { right: 2 },
+    2: { up: 7 },
+    7: { left: 8 },
+    8: { up: 10 }
+  });
 
   //Game
   const [direction, setDirection] = useState("up");
@@ -58,7 +65,7 @@ export const App = () => {
     15: { down: 12 },
     16: { up: 13 },
   };
-  
+
   const createDropDown = () => {
     const startSelect = document.getElementById("startSelect");
     const endSelect = document.getElementById("endSelect");
@@ -91,7 +98,7 @@ export const App = () => {
         for (const [moveDir, nextPos] of Object.entries(moves[position] || {})) {
             const nextPath = [...path];
             let currentDir = dir;
-
+            
             // 回転して正しい方向に向く
             while (currentDir !== moveDir) {
                 const currentIndex = directions.indexOf(currentDir);
@@ -104,7 +111,6 @@ export const App = () => {
                     currentDir = directions[(currentIndex + 3) % 4];
                 }
             }
-            
             nextPath.push("Go straight");
             queue.push({ position: nextPos, path: nextPath, dir: currentDir });
         }
@@ -112,6 +118,29 @@ export const App = () => {
     return null;
   }
   
+  const clearMove = (end) => {
+    let cPosition = 0;
+    let cDir = "up";
+    let cMove = {};
+    const cGuide = findPath(0, end);
+
+    while (cGuide.length > 0) {
+      const cGuideSentence = cGuide.shift();
+      
+      const currentIndex = directions.indexOf(cDir);
+      if (cGuideSentence === "Go straight") {
+        cMove[cPosition] = {[cDir]: moves[cPosition][cDir]};
+        cPosition = moves[cPosition][cDir];
+      } else if (cGuideSentence === "Turn right") {
+        cDir = directions[(currentIndex + 1) % 4];
+      } else if (cGuideSentence === "Turn left") {
+        cDir = directions[(currentIndex + 3) % 4];
+      }
+    }
+    setClearMoves(cMove);
+    setClearPosition(end);
+  }
+
   // 経路表示関数
   function findRoute() {
     const start = parseInt(document.getElementById("startSelect").value);
@@ -169,15 +198,22 @@ export const App = () => {
             moves={moves} 
             direction={direction} 
             directions={directions} 
-            setDirection={setDirection} 
-            clearPosition={clearPosition} 
-            setGuideSentence={setGuideSentence} 
-            findPath={findPath}
+            setDirection={setDirection}
+            guideSentence={guideSentence}
+            setGuideSentence={setGuideSentence}
             createDropDown={createDropDown}
             speak={speak}
+            clearMoves={clearMoves}
           />
         :
-          <Map setInstructions={setInstructions} setPlace={setPlace} setReasons={setReasons} setClearPosition={setClearPosition} speak={speak} />
+          <Map
+            setInstructions={setInstructions}
+            setPlace={setPlace}
+            setReasons={setReasons}
+            setClearPosition={setClearPosition}
+            speak={speak}
+            clearMove={clearMove}
+          />
         }
         </div>
         <div className="option">
