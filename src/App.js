@@ -16,6 +16,17 @@ export const App = () => {
   const [guide, setGuide] = useState([]);
   const [guideSentence, setGuideSentence] = useState([]);
   const [clearPosition, setClearPosition] = useState(10);
+  const [clearGuide, setClearGuide] = useState([
+    'Go straight',
+    'Turn right',
+    'Go straight',
+    'Turn left',
+    'Go straight',
+    'Turn left',
+    'Go straight',
+    'Turn right',
+    'Go straight'
+  ]);
   const [clearMoves, setClearMoves] = useState({
     0: { up: 1 },
     1: { right: 2 },
@@ -70,13 +81,15 @@ export const App = () => {
     const startSelect = document.getElementById("startSelect");
     const endSelect = document.getElementById("endSelect");
     if(!startSelect.lastChild) {
+      const optionStart = document.createElement("option");
+      optionStart.value = 0;
+      optionStart.text = positions[0].room;
+      startSelect.appendChild(optionStart);
       for (let i = 0; i < Object.keys(positions).length; i++) {    
         if(positions[i].room){
-            const optionStart = document.createElement("option");
             const optionEnd = document.createElement("option");
-            optionStart.value = optionEnd.value = i;
-            optionStart.text = optionEnd.text = positions[i].room;
-            startSelect.appendChild(optionStart);
+            optionEnd.value = i;
+            optionEnd.text = positions[i].room;
             endSelect.appendChild(optionEnd);
         }
       }
@@ -84,7 +97,7 @@ export const App = () => {
   }
 
   const findPath = (start, end) => {
-    const queue = [{ position: start, path: [], dir: direction }];
+    const queue = [{ position: start, path: [], dir: 'up' }];
     const visited = new Set();
 
     while (queue.length > 0) {
@@ -123,7 +136,7 @@ export const App = () => {
     let cDir = "up";
     let cMove = {};
     const cGuide = findPath(0, end);
-
+    
     while (cGuide.length > 0) {
       const cGuideSentence = cGuide.shift();
       
@@ -139,6 +152,7 @@ export const App = () => {
     }
     setClearMoves(cMove);
     setClearPosition(end);
+    setClearGuide(findPath(0, end));
   }
 
   // 経路表示関数
@@ -203,6 +217,9 @@ export const App = () => {
             setGuideSentence={setGuideSentence}
             createDropDown={createDropDown}
             speak={speak}
+            findPath={findPath}
+            clearPosition={clearPosition}
+            clearGuide={clearGuide}
             clearMoves={clearMoves}
           />
         :
@@ -223,9 +240,13 @@ export const App = () => {
           {changeMap ?
           <>
             <div id="routeControls">
-                <select id="startSelect"></select>
+              
+                <select id="startSelect"></select>から
                 <select id="endSelect"></select>
-                <button onClick={findRoute}>経路を表示</button>
+                <div>
+                  <button onClick={findRoute}>経路を表示</button>
+                </div>
+                
             </div>
             <div id="routeDisplay"></div>
             <div className="boxGuide">

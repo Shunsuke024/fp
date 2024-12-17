@@ -2,19 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 
 export const Game = (props) => {
     const canvasRef = useRef(null);
+    const request = useRef();
 
-    const { moves, direction, setDirection, directions, positions, guideSentence, setGuideSentence, createDropDown, speak, clearMoves} = props;
+    const { moves, direction, setDirection, directions, positions, guideSentence, setGuideSentence, createDropDown, speak, clearPosition, clearGuide, clearMoves} = props;
 
     const [positionNumber, setPositionNumber] = useState(0);
-    
     const [position, setPosition] = useState(positions[positionNumber]);
     const [currentPosition, setCurrentPosition] = useState(positions[positionNumber]);
-    
+    const [clearStep, setClearStep] = useState(0);
+
     let mapImage = new Image();
     mapImage.src = "./images/map.jpg"
     let playerImage = new Image();
     playerImage.src = "./images/RyutaOthers.png";
-    const request = useRef();
+
+    //canvas内処理
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -138,7 +140,7 @@ export const Game = (props) => {
                     if (position.y === positions[7].y) {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         newPosition.y -= 1;
-                        
+                        speechSynthesis.cancel();
                         if(currentPosition.y === 230) {
                             setCurrentPosition(positions[7]);
                         } else {
@@ -192,19 +194,20 @@ export const Game = (props) => {
             }
         }
         loop();
-
+        speak(clearGuide[clearStep]);
         return () => cancelAnimationFrame(request.current);
     },)
 
     // 左回転処理
     const rotateLeft = () => {
-        // speak("turn left");
         const currentIndex = directions.indexOf(direction);
         if(clearMoves[positionNumber]) {
             if (directions[(currentIndex + 3) % 4] == Object.keys(clearMoves[positionNumber])) {
                 const newDirection = directions[(currentIndex + 3) % 4]; // 左回転は-1の操作と同じ
+                const newStep = clearStep + 1;
                 setDirection(newDirection);
                 setGuideSentence([...guideSentence, "Turn left"]);
+                setClearStep(newStep);
             } else {
                 console.log("no")
             }
@@ -212,13 +215,14 @@ export const Game = (props) => {
     }
     // 右回転処理
     const rotateRight = () => {
-        // speak("turn right");
         const currentIndex = directions.indexOf(direction);
         if(clearMoves[positionNumber]) {
             if (directions[(currentIndex + 1) % 4] == Object.keys(clearMoves[positionNumber])) {
                 const newDirection = directions[(currentIndex + 1) % 4]; // 右回転は+1の操作と同じ
+                const newStep = clearStep + 1;
                 setDirection(newDirection);
                 setGuideSentence([...guideSentence, "Turn right"]);
+                setClearStep(newStep);
             } else {
                 console.log("no")
             }
@@ -227,12 +231,13 @@ export const Game = (props) => {
     // 移動処理
     const move = () => {
         if (clearMoves[positionNumber] && clearMoves[positionNumber][direction] !== undefined) {
-            // speak("go straight");
             const newPositionNumber = clearMoves[positionNumber][direction];
+            const newStep = clearStep + 1;
             setCurrentPosition(positions[positionNumber])
             setPositionNumber(newPositionNumber);
             setPosition(positions[newPositionNumber]);
             setGuideSentence([...guideSentence, "Go straight"]);
+            setClearStep(newStep);
         } else {
             console.log("no")
         }
