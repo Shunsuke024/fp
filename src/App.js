@@ -11,7 +11,7 @@ export const App = () => {
   const [reasons, setReasons] = useState([]);
   const [place, setPlace] = useState("This is my favorite place, the ~.");
   const [sentences, setSentences] = useState([]);
-  const [changeMap, setChangeMap] = useState(true);
+  const [changeMap, setChangeMap] = useState(false);
   const [isGuide, setIsGuide] = useState(false);
   const [guide, setGuide] = useState([]);
   const [guideSentence, setGuideSentence] = useState([]);
