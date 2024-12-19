@@ -119,6 +119,15 @@
 .eventNone {
   pointer-events: none;
 }
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.resetGame {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
 #controls {
   text-align: right;
   margin-right: 5px;
@@ -129,4 +138,10 @@
   width: 60px;
   height: 40px;
   margin-left: 3px;
+}
+.correct-btn {
+  background-color: rgb(162, 162, 254);
+}
+.incorrect-btn {
+  background-color: rgb(255, 80, 109);
 }

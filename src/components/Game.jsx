@@ -194,10 +194,21 @@ export const Game = (props) => {
             }
         }
         loop();
-        speak(clearGuide[clearStep]);
+
+        setTimeout(() => {
+            speak(clearGuide[clearStep]);
+        },"1200");
+        
         return () => cancelAnimationFrame(request.current);
     },)
 
+    const removeClassBtn = () => {
+        const btns = document.getElementsByClassName("direction-btn");
+        Array.from(btns).forEach(btn=> {
+            btn.classList.remove("incorrect-btn");
+        })
+    }
+    
     // 左回転処理
     const rotateLeft = () => {
         const currentIndex = directions.indexOf(direction);
@@ -208,8 +219,14 @@ export const Game = (props) => {
                 setDirection(newDirection);
                 setGuideSentence([...guideSentence, "Turn left"]);
                 setClearStep(newStep);
+
+                removeClassBtn();
+                document.getElementById("left-btn").classList.add("correct-btn");
+                setTimeout(() => {
+                    document.getElementById("left-btn").classList.remove("correct-btn");
+                },"1000");
             } else {
-                console.log("no")
+                document.getElementById("left-btn").classList.add("incorrect-btn");
             }
         }
     }
@@ -223,8 +240,14 @@ export const Game = (props) => {
                 setDirection(newDirection);
                 setGuideSentence([...guideSentence, "Turn right"]);
                 setClearStep(newStep);
+
+                removeClassBtn();
+                document.getElementById("right-btn").classList.add("correct-btn");
+                setTimeout(() => {
+                    document.getElementById("right-btn").classList.remove("correct-btn");
+                },"1000");
             } else {
-                console.log("no")
+                document.getElementById("right-btn").classList.add("incorrect-btn");
             }
         }
     }
@@ -238,20 +261,38 @@ export const Game = (props) => {
             setPosition(positions[newPositionNumber]);
             setGuideSentence([...guideSentence, "Go straight"]);
             setClearStep(newStep);
+
+            removeClassBtn();
+            document.getElementById("straight-btn").classList.add("correct-btn");
+            setTimeout(() => {
+                document.getElementById("straight-btn").classList.remove("correct-btn");
+            },"1000");
         } else {
-            console.log("no")
+            document.getElementById("straight-btn").classList.add("incorrect-btn");
         }
+    }
+
+    const onclickResetGame = () => {
+        setDirection("up");
+        setPositionNumber(0);
+        setPosition(positions[0]);
+        setCurrentPosition(positions[0]);
+        setClearStep(0);
+        setGuideSentence([]);
+        removeClassBtn();
     }
 
     return (
         <>
             <canvas id="mapCanvas" ref={canvasRef} width={700} height={500} />
-            <div id="controls">
-                <button className="direction-btn" onClick={rotateLeft}>左回転</button>
-                <button className="direction-btn" onClick={move}>進む</button>
-                <button className="direction-btn" onClick={rotateRight}>右回転</button>
+            <div className="buttons">
+                <img src="./images/reset.png" className="resetGame" alt="" onClick={onclickResetGame}/>
+                <div id="controls">
+                    <button id="left-btn" className="direction-btn" onClick={rotateLeft}>左回転</button>
+                    <button id="straight-btn" className="direction-btn" onClick={move}>進む</button>
+                    <button id="right-btn" className="direction-btn" onClick={rotateRight}>右回転</button>
+                </div>
             </div>
-            
         </>
     )
 }

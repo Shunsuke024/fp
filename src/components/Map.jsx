@@ -5,7 +5,7 @@ export const Map = (props) => {
 
     const classRoomSet = () => {
         speak("classroom");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the classroom.");
         setReasons([
           {id: "r0", ja: "担任の先生", en: "I like my hoomeroom teacher."},
@@ -18,7 +18,7 @@ export const Map = (props) => {
     }
     const EnglishRoomSet = () => {
         speak("English room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the English room.");
         setReasons([
             {id: "r0", ja: "英語", en: "I like English."},
@@ -30,7 +30,7 @@ export const Map = (props) => {
     }
     const cookingRoomSet = () => {
         speak("cooking room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the cooking room.");
         setReasons([
             {id: "r0", ja: "料理をすること", en: "I like cooking."},
@@ -40,7 +40,7 @@ export const Map = (props) => {
     }
     const computerRoomSet = () => {
         speak("computer room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the computer room.");
         setReasons([
             {id: "r0", ja: "コンピューター", en: "I like computers."},
@@ -51,7 +51,7 @@ export const Map = (props) => {
     }
     const musicRoomSet = () => {
         speak("music room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the music room.");
         setReasons([
             {id: "r0", ja: "音楽", en: "I like music."},
@@ -62,7 +62,7 @@ export const Map = (props) => {
     }
     const artsAndCraftsRoomSet = () => {
         speak("arts and crafts room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the arts and crafts room.");
         setReasons([
             {id: "r0", ja: "美術", en: "I like arts and crafts."},
@@ -73,7 +73,7 @@ export const Map = (props) => {
     }
     const scienceRoomSet = () => {
         speak("science room");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the science room.");
         setReasons([
             {id: "r0", ja: "科学", en: "I like science."},
@@ -85,7 +85,7 @@ export const Map = (props) => {
     }
     const gymSet = () => {
         speak("gym");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the gym.");
         setReasons([
             {id: "r0", ja: "体育", en: "I like PE."},
@@ -97,7 +97,7 @@ export const Map = (props) => {
     }
     const schoolNursesOfficeSet = () => {
         speak("school nurse's office");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the scool nurse's office.");
         setReasons([
             {id: "r0", ja: "保健室の先生", en: "I like the school nurse."},
@@ -107,7 +107,7 @@ export const Map = (props) => {
     }
     const librarySet = () => {
         speak("library");
-        setInstructions("好きな理由を選ぶ。");
+        setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the library.");
         setReasons([
             {id: "r0", ja: "本", en: "I like books."},

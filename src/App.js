@@ -7,7 +7,7 @@ import { Sentence } from "./components/Sentence";
 import { Game } from "./components/Game";
 
 export const App = () => {
-  const [instructions, setInstructions] = useState("好きな場所を選ぶ。");
+  const [instructions, setInstructions] = useState("好きな場所を選びましょう。");
   const [reasons, setReasons] = useState([]);
   const [place, setPlace] = useState("This is my favorite place, the ~.");
   const [sentences, setSentences] = useState([]);
