@@ -198,6 +198,11 @@ export const App = () => {
     rooms.forEach(room => {
       room.classList.remove("eventNone");
     });
+    setDirection("up");
+    const btns = document.getElementsByClassName("direction-btn");
+    Array.from(btns).forEach(btn=> {
+        btn.classList.remove("eventNone");
+    });
   }
   
   return (

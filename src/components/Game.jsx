@@ -209,7 +209,7 @@ export const Game = (props) => {
         const btns = document.getElementsByClassName("direction-btn");
         Array.from(btns).forEach(btn=> {
             btn.classList.remove("incorrect-btn");
-        })
+        });
     }
     
     // 左回転処理
@@ -285,7 +285,7 @@ export const Game = (props) => {
         const btns = document.getElementsByClassName("direction-btn");
         Array.from(btns).forEach(btn=> {
             btn.classList.add("eventNone");
-        })
+        });
     }
 
     const onclickResetGame = () => {
@@ -299,7 +299,7 @@ export const Game = (props) => {
         const btns = document.getElementsByClassName("direction-btn");
         Array.from(btns).forEach(btn=> {
             btn.classList.remove("eventNone");
-        })
+        });
     }
 
     return (
