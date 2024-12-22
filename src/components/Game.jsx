@@ -16,6 +16,9 @@ export const Game = (props) => {
     let playerImage = new Image();
     playerImage.src = "./images/RyutaOthers.png";
 
+    const correctAudio = new Audio("correct.mp3");
+    const incorrectAudio =new Audio("incorrect.mp3");
+
     //canvas内処理
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -220,12 +223,14 @@ export const Game = (props) => {
                 setGuideSentence([...guideSentence, "Turn left"]);
                 setClearStep(newStep);
 
+                correctAudio.play();
                 removeClassBtn();
                 document.getElementById("left-btn").classList.add("correct-btn");
                 setTimeout(() => {
                     document.getElementById("left-btn").classList.remove("correct-btn");
                 },"1000");
             } else {
+                incorrectAudio.play();
                 document.getElementById("left-btn").classList.add("incorrect-btn");
             }
         }
@@ -241,12 +246,14 @@ export const Game = (props) => {
                 setGuideSentence([...guideSentence, "Turn right"]);
                 setClearStep(newStep);
 
+                correctAudio.play();
                 removeClassBtn();
                 document.getElementById("right-btn").classList.add("correct-btn");
                 setTimeout(() => {
                     document.getElementById("right-btn").classList.remove("correct-btn");
                 },"1000");
             } else {
+                incorrectAudio.play();
                 document.getElementById("right-btn").classList.add("incorrect-btn");
             }
         }
@@ -262,14 +269,23 @@ export const Game = (props) => {
             setGuideSentence([...guideSentence, "Go straight"]);
             setClearStep(newStep);
 
+            correctAudio.play();
             removeClassBtn();
             document.getElementById("straight-btn").classList.add("correct-btn");
             setTimeout(() => {
                 document.getElementById("straight-btn").classList.remove("correct-btn");
             },"1000");
         } else {
+            incorrectAudio.play();
             document.getElementById("straight-btn").classList.add("incorrect-btn");
         }
+    }
+    
+    if(positionNumber === clearPosition) {
+        const btns = document.getElementsByClassName("direction-btn");
+        Array.from(btns).forEach(btn=> {
+            btn.classList.add("eventNone");
+        })
     }
 
     const onclickResetGame = () => {
@@ -280,6 +296,10 @@ export const Game = (props) => {
         setClearStep(0);
         setGuideSentence([]);
         removeClassBtn();
+        const btns = document.getElementsByClassName("direction-btn");
+        Array.from(btns).forEach(btn=> {
+            btn.classList.remove("eventNone");
+        })
     }
 
     return (

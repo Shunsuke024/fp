@@ -266,7 +266,7 @@ export const App = () => {
               setIsGuide={setIsGuide}
             />
             {isGuide ?
-              <button type="button" onClick={onclickChangeMap} >道案内へ</button>
+              <button className="change-btn" type="button" onClick={onclickChangeMap} >道案内へ→</button>
             :
               <></>
             }
