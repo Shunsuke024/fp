@@ -4,12 +4,27 @@ export const Game = (props) => {
     const canvasRef = useRef(null);
     const request = useRef();
 
-    const { moves, direction, setDirection, directions, positions, guideSentence, setGuideSentence, createDropDown, speak, clearPosition, clearGuide, clearMoves} = props;
+    const {
+        moves, 
+        direction, 
+        setDirection, 
+        directions, 
+        positions, 
+        guideSentence, 
+        setGuideSentence, 
+        createDropDown, 
+        speak, clearPosition, 
+        clearGuide, 
+        clearMoves, 
+        backClearGuide, 
+        backClearMoves
+    } = props;
 
     const [positionNumber, setPositionNumber] = useState(0);
     const [position, setPosition] = useState(positions[positionNumber]);
     const [currentPosition, setCurrentPosition] = useState(positions[positionNumber]);
     const [clearStep, setClearStep] = useState(0);
+    const [isBack, setIsBack] = useState(false);
 
     let mapImage = new Image();
     mapImage.src = "./images/map.jpg"
@@ -199,7 +214,12 @@ export const Game = (props) => {
         loop();
 
         setTimeout(() => {
-            speak(clearGuide[clearStep]);
+            if (isBack === false) {
+                speak(clearGuide[clearStep]);
+            } else {
+                speak(backClearGuide[clearStep]);
+            }
+            
         },"1200");
         
         return () => cancelAnimationFrame(request.current);
@@ -211,57 +231,122 @@ export const Game = (props) => {
             btn.classList.remove("incorrect-btn");
         });
     }
-    
+    const processRotateLeft = () => {
+        const currentIndex = directions.indexOf(direction);
+        const newDirection = directions[(currentIndex + 3) % 4]; // 左回転は-1の操作と同じ
+        const newStep = clearStep + 1;
+        setDirection(newDirection);
+        setGuideSentence([...guideSentence, "Turn left"]);
+        setClearStep(newStep);
+
+        correctAudio.play();
+        removeClassBtn();
+        document.getElementById("left-btn").classList.add("correct-btn");
+        setTimeout(() => {
+            document.getElementById("left-btn").classList.remove("correct-btn");
+        },"1000");
+    }
+    const processRotateRight = () => {
+        const currentIndex = directions.indexOf(direction);
+        const newDirection = directions[(currentIndex + 1) % 4]; // 右回転は+1の操作と同じ
+        const newStep = clearStep + 1;
+        setDirection(newDirection);
+        setGuideSentence([...guideSentence, "Turn right"]);
+        setClearStep(newStep);
+
+        correctAudio.play();
+        removeClassBtn();
+        document.getElementById("right-btn").classList.add("correct-btn");
+        setTimeout(() => {
+            document.getElementById("right-btn").classList.remove("correct-btn");
+        },"1000");
+    }
+    // const processMove = () => {
+    //     const newPositionNumber = clearMoves[positionNumber][direction];
+    //     const newStep = clearStep + 1;
+    //     setCurrentPosition(positions[positionNumber])
+    //     setPositionNumber(newPositionNumber);
+    //     setPosition(positions[newPositionNumber]);
+    //     setGuideSentence([...guideSentence, "Go straight"]);
+        
+    //     correctAudio.play();
+    //     removeClassBtn();
+    //     document.getElementById("straight-btn").classList.add("correct-btn");
+    //     setTimeout(() => {
+    //         document.getElementById("straight-btn").classList.remove("correct-btn");
+    //     },"1000");
+    // }
     // 左回転処理
     const rotateLeft = () => {
         const currentIndex = directions.indexOf(direction);
-        if(clearMoves[positionNumber]) {
+        if (clearMoves[positionNumber] && !isBack) {
             if (directions[(currentIndex + 3) % 4] == Object.keys(clearMoves[positionNumber])) {
-                const newDirection = directions[(currentIndex + 3) % 4]; // 左回転は-1の操作と同じ
-                const newStep = clearStep + 1;
-                setDirection(newDirection);
-                setGuideSentence([...guideSentence, "Turn left"]);
-                setClearStep(newStep);
-
-                correctAudio.play();
-                removeClassBtn();
-                document.getElementById("left-btn").classList.add("correct-btn");
-                setTimeout(() => {
-                    document.getElementById("left-btn").classList.remove("correct-btn");
-                },"1000");
+                processRotateLeft();
             } else {
                 incorrectAudio.play();
                 document.getElementById("left-btn").classList.add("incorrect-btn");
             }
+        } else if (backClearMoves[positionNumber] && isBack) {
+            if (clearStep === 0) {
+                processRotateLeft();
+            } else if (directions[(currentIndex + 3) % 4] == Object.keys(backClearMoves[positionNumber])) {
+                processRotateLeft();
+            } else {
+                incorrectAudio.play();
+                document.getElementById("left-btn").classList.add("incorrect-btn");
+            }
+        } else {
+            incorrectAudio.play();
+            document.getElementById("left-btn").classList.add("incorrect-btn");
         }
     }
     // 右回転処理
     const rotateRight = () => {
         const currentIndex = directions.indexOf(direction);
-        if(clearMoves[positionNumber]) {
+        if(clearMoves[positionNumber] && !isBack) {
             if (directions[(currentIndex + 1) % 4] == Object.keys(clearMoves[positionNumber])) {
-                const newDirection = directions[(currentIndex + 1) % 4]; // 右回転は+1の操作と同じ
-                const newStep = clearStep + 1;
-                setDirection(newDirection);
-                setGuideSentence([...guideSentence, "Turn right"]);
-                setClearStep(newStep);
-
-                correctAudio.play();
-                removeClassBtn();
-                document.getElementById("right-btn").classList.add("correct-btn");
-                setTimeout(() => {
-                    document.getElementById("right-btn").classList.remove("correct-btn");
-                },"1000");
+                processRotateRight();
             } else {
                 incorrectAudio.play();
                 document.getElementById("right-btn").classList.add("incorrect-btn");
             }
+        } else if (backClearMoves[positionNumber] && isBack) {
+            if (directions[(currentIndex + 1) % 4] == Object.keys(backClearMoves[positionNumber])) {
+                processRotateRight();
+            } else {
+                incorrectAudio.play();
+                document.getElementById("right-btn").classList.add("incorrect-btn");
+            }
+        } else {
+            incorrectAudio.play();
+            document.getElementById("right-btn").classList.add("incorrect-btn");
         }
     }
     // 移動処理
     const move = () => {
-        if (clearMoves[positionNumber] && clearMoves[positionNumber][direction] !== undefined) {
+        if (clearMoves[positionNumber] && clearMoves[positionNumber][direction] !== undefined && !isBack) {
             const newPositionNumber = clearMoves[positionNumber][direction];
+            const newStep = clearStep + 1;
+            setCurrentPosition(positions[positionNumber])
+            setPositionNumber(newPositionNumber);
+            setPosition(positions[newPositionNumber]);
+            setGuideSentence([...guideSentence, "Go straight"]);
+            
+            correctAudio.play();
+            removeClassBtn();
+            document.getElementById("straight-btn").classList.add("correct-btn");
+            setTimeout(() => {
+                document.getElementById("straight-btn").classList.remove("correct-btn");
+            },"1000");
+
+            if(newPositionNumber === clearPosition) {
+                setIsBack(true);
+                setClearStep(0);
+            } else {
+                setClearStep(newStep);
+            }
+        } else if (backClearMoves[positionNumber] && backClearMoves[positionNumber][direction] !== undefined && isBack) {
+            const newPositionNumber = backClearMoves[positionNumber][direction];
             const newStep = clearStep + 1;
             setCurrentPosition(positions[positionNumber])
             setPositionNumber(newPositionNumber);
@@ -281,12 +366,7 @@ export const Game = (props) => {
         }
     }
     
-    if(positionNumber === clearPosition) {
-        const btns = document.getElementsByClassName("direction-btn");
-        Array.from(btns).forEach(btn=> {
-            btn.classList.add("eventNone");
-        });
-    }
+    
 
     const onclickResetGame = () => {
         setDirection("up");
@@ -294,6 +374,7 @@ export const Game = (props) => {
         setPosition(positions[0]);
         setCurrentPosition(positions[0]);
         setClearStep(0);
+        setIsBack(false);
         setGuideSentence([]);
         removeClassBtn();
         const btns = document.getElementsByClassName("direction-btn");

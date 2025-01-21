@@ -34,6 +34,26 @@ export const App = () => {
     7: { left: 8 },
     8: { up: 10 }
   });
+  const [backClearGuide, setBackClearGuide] = useState([
+    'Turn left',
+    'Turn left',
+    'Go straight',
+    'Turn left',
+    'Go straight',
+    'Turn right',
+    'Go straight',
+    'Turn right',
+    'Go straight',
+    'Turn left',
+    'Go straight'
+  ]);
+  const [backClearMoves, setBackClearMoves] = useState({
+    1: {down: 0},
+    2: {left: 1},
+    7: {down: 2},
+    8: {right: 7},
+    10:{down: 8}
+  });
 
   //Game
   const [direction, setDirection] = useState("up");
@@ -96,8 +116,8 @@ export const App = () => {
     }
   }
 
-  const findPath = (start, end) => {
-    const queue = [{ position: start, path: [], dir: 'up' }];
+  const findPath = (start, end, dir) => {
+    const queue = [{ position: start, path: [], dir: dir }];
     const visited = new Set();
 
     while (queue.length > 0) {
@@ -126,7 +146,7 @@ export const App = () => {
             }
             nextPath.push("Go straight");
             queue.push({ position: nextPos, path: nextPath, dir: currentDir });
-        }
+        }   
     }
     return null;
   }
@@ -135,32 +155,62 @@ export const App = () => {
     let cPosition = 0;
     let cDir = "up";
     let cMove = {};
-    const cGuide = findPath(0, end);
+    const cGuide = findPath(0, end, cDir);
+    setClearGuide(findPath(0, end, cDir));
     
     while (cGuide.length > 0) {
-      const cGuideSentence = cGuide.shift();
+      const GuideSentence = cGuide.shift();
       
       const currentIndex = directions.indexOf(cDir);
-      if (cGuideSentence === "Go straight") {
+      if (GuideSentence === "Go straight") {
         cMove[cPosition] = {[cDir]: moves[cPosition][cDir]};
         cPosition = moves[cPosition][cDir];
-      } else if (cGuideSentence === "Turn right") {
+      } else if (GuideSentence === "Turn right") {
         cDir = directions[(currentIndex + 1) % 4];
-      } else if (cGuideSentence === "Turn left") {
+      } else if (GuideSentence === "Turn left") {
         cDir = directions[(currentIndex + 3) % 4];
       }
     }
-    setClearMoves(cMove);
-    setClearPosition(end);
-    setClearGuide(findPath(0, end));
-  }
 
+    let cbPosition = cPosition;
+    let cbMove = {};
+    const cbGuide = findPath(end, 0, cDir);
+    setBackClearGuide(findPath(end, 0, cDir));
+
+    while (cbGuide.length > 0) {
+      const GuideSentence = cbGuide.shift();
+      
+      const currentIndex = directions.indexOf(cDir);
+      if (GuideSentence === "Go straight") {
+        cbMove[cbPosition] = {[cDir]: moves[cbPosition][cDir]};
+        cbPosition = moves[cbPosition][cDir];
+      } else if (GuideSentence === "Turn right") {
+        cDir = directions[(currentIndex + 1) % 4];
+      } else if (GuideSentence === "Turn left") {
+        cDir = directions[(currentIndex + 3) % 4];
+      }
+    }
+    setClearPosition(end);
+    setClearMoves(cMove);
+    setBackClearMoves(cbMove);
+  }
+  
   // 経路表示関数
   function findRoute() {
     const start = parseInt(document.getElementById("startSelect").value);
     const end = parseInt(document.getElementById("endSelect").value);
     // 行きの経路
-    const pathToEnd = findPath(start, end);
+    const pathToEnd = findPath(start, end, "up");
+    setGuide(pathToEnd);
+  }
+  const findBackRoute = () => {
+    const start = parseInt(document.getElementById("startSelect").value);
+    const end = parseInt(document.getElementById("endSelect").value);
+    let dir = "up";
+    if (end === 5 || end === 6 || end === 11 || end === 13 || end === 14 || end === 16) {
+      dir = "down";
+    }
+    const pathToEnd = findPath(end, start, dir);
     setGuide(pathToEnd);
   }
 
@@ -226,6 +276,8 @@ export const App = () => {
             clearPosition={clearPosition}
             clearGuide={clearGuide}
             clearMoves={clearMoves}
+            backClearGuide={backClearGuide}
+            backClearMoves={backClearMoves}
           />
         :
           <Map
@@ -250,6 +302,7 @@ export const App = () => {
                 <select id="endSelect"></select>
                 <div>
                   <button onClick={findRoute}>経路を表示</button>
+                  <button onClick={findBackRoute}>帰り</button>
                 </div>
                 
             </div>

@@ -8,7 +8,7 @@ export const Map = (props) => {
         setInstructions("好きな理由を選びましょう。");
         setPlace("This is my favorite place, the classroom.");
         setReasons([
-          {id: "r0", ja: "担任の先生", en: "I like my hoomeroom teacher."},
+          {id: "r0", ja: "担任の先生", en: "I like my homeroom teacher."},
           {id: "r1", ja: "友だち", en: "I like my friends."},
           {id: "r2", ja: "友だちと話すこと", en: "I like talking with my friends."},
           {id: "r3", ja: "先生と話すこと", en: "I like talking with my teacher."},
