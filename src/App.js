@@ -15,6 +15,7 @@ export const App = () => {
   const [isGuide, setIsGuide] = useState(false);
   const [guide, setGuide] = useState([]);
   const [guideSentence, setGuideSentence] = useState([]);
+  const [backGuideSentence, setBackGuideSentence] = useState([]);
   const [clearPosition, setClearPosition] = useState(10);
   const [clearGuide, setClearGuide] = useState([
     'Go straight',
@@ -66,9 +67,9 @@ export const App = () => {
     4: { x: 320, y: 270, room: "gym" },
     5: { x: 320, y: 370, room: "school nurse's office" },
     6: { x: 320, y: 410, room: "library" },
-    7: { x: 237, y:  90 },
-    8: { x: 153, y:  90 },
-    9: { x: 320, y:  90 },
+    7: { x: 237, y:  93 },
+    8: { x: 153, y:  93 },
+    9: { x: 320, y:  93 },
    10: { x: 153, y:   8, room: "classroom" },
    11: { x: 153, y: 130, room: "English room" },
    12: { x: 320, y:  50, room: "music room" },
@@ -243,6 +244,7 @@ export const App = () => {
     setIsGuide(false);
     setGuide([]);
     setGuideSentence([]);
+    setBackGuideSentence([]);
 
     const rooms = document.querySelectorAll("rect");
     rooms.forEach(room => {
@@ -269,7 +271,9 @@ export const App = () => {
             directions={directions} 
             setDirection={setDirection}
             guideSentence={guideSentence}
+            backGuideSentence={backGuideSentence}
             setGuideSentence={setGuideSentence}
+            setBackGuideSentence={setBackGuideSentence}
             createDropDown={createDropDown}
             speak={speak}
             findPath={findPath}
@@ -301,7 +305,7 @@ export const App = () => {
                 <select id="startSelect"></select>から
                 <select id="endSelect"></select>
                 <div>
-                  <button onClick={findRoute}>経路を表示</button>
+                  <button onClick={findRoute}>行き</button>
                   <button onClick={findBackRoute}>帰り</button>
                 </div>
                 
@@ -334,7 +338,14 @@ export const App = () => {
       </div>
 
       <div className="main2">
-        <Sentence place={place} sentences={sentences} setSentences={setSentences} changeMap={changeMap} guideSentence={guideSentence} />
+        <Sentence
+          place={place}
+          sentences={sentences}
+          setSentences={setSentences}
+          changeMap={changeMap}
+          guideSentence={guideSentence}
+          backGuideSentence={backGuideSentence}
+        />
         <div>
           <img src="./images/volume.png" id="enVoice" className="imgVolume" alt="" onClick={sentenceEnVoice} />
         </div>

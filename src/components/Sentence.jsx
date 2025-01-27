@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
 export const Sentence = (props) => {
-    const { place, sentences, setSentences, changeMap, guideSentence  } = props;
+    const { place, sentences, setSentences, changeMap, guideSentence, backGuideSentence } = props;
 
     const onclickDelete = (id) => {
         const oldSentences = [...sentences];
         const newSentences = oldSentences.filter(newSentences => newSentences.id !== id);
         setSentences(newSentences);
-
+        
         const returnReason = document.getElementById(id);
         returnReason.style.backgroundColor = "rgb(249, 240, 255)";
         returnReason.classList.remove("eventNone");
@@ -62,6 +62,16 @@ export const Sentence = (props) => {
                 );
               })}
             </div>
+          </div>
+
+          <div className="guideSentence">
+            {backGuideSentence.map((guideSentence, index) => {
+              return (
+                <div key={index} className="sentence">
+                  {guideSentence}.
+                </div>
+              );
+              })}
           </div>
         </div>
     )
