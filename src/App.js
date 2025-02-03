@@ -7,7 +7,7 @@ import { Sentence } from "./components/Sentence";
 import { Game } from "./components/Game";
 
 export const App = () => {
-  const [instructions, setInstructions] = useState("好きな場所を選びましょう。");
+  const [instruction, setInstruction] = useState("好きな場所を選びましょう。");
   const [reasons, setReasons] = useState([]);
   const [place, setPlace] = useState("This is my favorite place, the ~.");
   const [sentences, setSentences] = useState([]);
@@ -106,14 +106,18 @@ export const App = () => {
       optionStart.value = 0;
       optionStart.text = positions[0].room;
       startSelect.appendChild(optionStart);
-      for (let i = 0; i < Object.keys(positions).length; i++) {    
-        if(positions[i].room){
-            const optionEnd = document.createElement("option");
-            optionEnd.value = i;
-            optionEnd.text = positions[i].room;
-            endSelect.appendChild(optionEnd);
-        }
-      }
+      const optionEnd = document.createElement("option");
+      optionEnd.value = clearPosition;
+      optionEnd.text = positions[clearPosition].room;
+      endSelect.appendChild(optionEnd);
+      // for (let i = 0; i < Object.keys(positions).length; i++) {    
+      //   if(positions[i].room){
+      //       const optionEnd = document.createElement("option");
+      //       optionEnd.value = i;
+      //       optionEnd.text = positions[i].room;
+      //       endSelect.appendChild(optionEnd);
+      //   }
+      // }
     }
   }
 
@@ -198,15 +202,15 @@ export const App = () => {
   
   // 経路表示関数
   function findRoute() {
-    const start = parseInt(document.getElementById("startSelect").value);
-    const end = parseInt(document.getElementById("endSelect").value);
+    const start = 0;
+    const end = clearPosition;
     // 行きの経路
     const pathToEnd = findPath(start, end, "up");
     setGuide(pathToEnd);
   }
   const findBackRoute = () => {
-    const start = parseInt(document.getElementById("startSelect").value);
-    const end = parseInt(document.getElementById("endSelect").value);
+    const start = 0;
+    const end = clearPosition;
     let dir = "up";
     if (end === 5 || end === 6 || end === 11 || end === 13 || end === 14 || end === 16) {
       dir = "down";
@@ -216,8 +220,9 @@ export const App = () => {
   }
 
   const onclickChangeMap = () => {
-    setInstructions(`${positions[clearPosition].room}まで道案内しましょう。`)
-    setChangeMap(true);    
+    setInstruction(`${positions[clearPosition].room}まで道案内しましょう。`);
+    setChangeMap(true);
+    findRoute();
   }
   function speak(text) {
     speechSynthesis.cancel();
@@ -236,7 +241,7 @@ export const App = () => {
   }
 
   const onclickReset = () => {
-    setInstructions("好きな場所を選ぶ。");
+    setInstruction("好きな場所を選ぶ。");
     setReasons([]);
     setPlace("This is my favorite place, the ~.");
     setSentences([]);
@@ -255,6 +260,10 @@ export const App = () => {
     Array.from(btns).forEach(btn=> {
         btn.classList.remove("eventNone");
     });
+    if(changeMap) {
+      document.getElementById("goRouteButton").classList.add("currentRouteButton");
+      document.getElementById("backRouteButton").classList.remove("currentRouteButton");
+    }
   }
   
   return (
@@ -275,8 +284,10 @@ export const App = () => {
             setGuideSentence={setGuideSentence}
             setBackGuideSentence={setBackGuideSentence}
             createDropDown={createDropDown}
+            setInstruction={setInstruction}
             speak={speak}
-            findPath={findPath}
+            findRoute={findRoute}
+            findBackRoute={findBackRoute}
             clearPosition={clearPosition}
             clearGuide={clearGuide}
             clearMoves={clearMoves}
@@ -285,7 +296,7 @@ export const App = () => {
           />
         :
           <Map
-            setInstructions={setInstructions}
+            setInstruction={setInstruction}
             setPlace={setPlace}
             setReasons={setReasons}
             setClearPosition={setClearPosition}
@@ -295,8 +306,8 @@ export const App = () => {
         }
         </div>
         <div className="option">
-          <div className="instructions">
-            <p>{instructions}</p>
+          <div className="instruction">
+            <p>{instruction}</p>
           </div>
           {changeMap ?
           <>
@@ -305,8 +316,8 @@ export const App = () => {
                 <select id="startSelect"></select>から
                 <select id="endSelect"></select>
                 <div>
-                  <button onClick={findRoute}>行き</button>
-                  <button onClick={findBackRoute}>帰り</button>
+                  <button id="goRouteButton" className="routeButton eventNone currentRouteButton">行き</button>
+                  <button id="backRouteButton" className="routeButton eventNone">帰り</button>
                 </div>
                 
             </div>

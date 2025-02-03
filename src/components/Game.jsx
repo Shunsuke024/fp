@@ -14,8 +14,11 @@ export const Game = (props) => {
         backGuideSentence, 
         setGuideSentence,
         setBackGuideSentence,
-        createDropDown, 
+        createDropDown,
+        setInstruction,
         speak,
+        findRoute,
+        findBackRoute,
         clearPosition, 
         clearGuide, 
         clearMoves, 
@@ -173,9 +176,7 @@ export const Game = (props) => {
                 }
                 i = 0;
             }
-        }
-
-        
+        }        
 
         //動き
         const loop = () => {
@@ -220,7 +221,7 @@ export const Game = (props) => {
                             drawPlayer();
                             drawArrow();
                         }
-                    }else{
+                    } else {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         newPosition.y -= 1;
                         setCurrentPosition(newPosition);
@@ -248,7 +249,7 @@ export const Game = (props) => {
                             drawPlayer();
                             drawArrow();
                         }
-                    }else{
+                    } else {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         newPosition.y += 1;
                         setCurrentPosition(newPosition);
@@ -273,9 +274,38 @@ export const Game = (props) => {
                 speak(clearGuide[clearStep]);
             } else if (clearStep === 0 && isBack) {
                 speak(`This is the ${positions[clearPosition].room}, ${backClearGuide[clearStep]}`);
+            } else if (positionNumber === 0 && isBack) {
+                speak("It's completed");
+                const w = 300;  //横の長さ
+                const h = 150;  //縦の長さ
+                const x = (canvas.width - w) / 2;  //左上の頂点x座標
+                const y = (canvas.height - h) / 2;  //左上の頂点y座標
+                const r = 20;  //角丸の半径
+                const strokeColor = "black"; //枠線色
+                const fillColor = "white";  //塗りつぶし色
+                ctx.beginPath();
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = strokeColor;
+                ctx.fillStyle = fillColor;
+                ctx.moveTo(x,y + r);
+                ctx.arc(x+r,y+h-r,r,Math.PI,Math.PI*0.5,true);
+                ctx.arc(x+w-r,y+h-r,r,Math.PI*0.5,0,1);
+                ctx.arc(x+w-r,y+r,r,0,Math.PI*1.5,1);
+                ctx.arc(x+r,y+r,r,Math.PI*1.5,Math.PI,1);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fill();
+                ctx.fillStyle = "black";
+                ctx.font = "25px sans-serif"
+                ctx.fillText("It's completed!!", canvas.width / 2 - 100, canvas.height / 2 + 10);
+
+                const btns = document.getElementsByClassName("direction-btn");
+                Array.from(btns).forEach(btn=> {
+                    btn.classList.add("eventNone");
+                });
             } else if (isBack) {
                 speak(backClearGuide[clearStep]);
-            } 
+            }
         },"1200");
         
         return () => cancelAnimationFrame(request.current);
@@ -387,6 +417,10 @@ export const Game = (props) => {
             if(newPositionNumber === clearPosition) {
                 setIsBack(true);
                 setClearStep(0);
+                findBackRoute();
+                document.getElementById("goRouteButton").classList.remove("currentRouteButton");
+                document.getElementById("backRouteButton").classList.add("currentRouteButton");
+                setInstruction("entranceまで道案内しましょう。");
             } else {
                 setClearStep(newStep);
             }
@@ -420,11 +454,15 @@ export const Game = (props) => {
         setIsBack(false);
         setGuideSentence([]);
         setBackGuideSentence([]);
+        setInstruction(`${positions[clearPosition].room}まで道案内しましょう。`);
         removeClassBtn();
         const btns = document.getElementsByClassName("direction-btn");
         Array.from(btns).forEach(btn=> {
             btn.classList.remove("eventNone");
         });
+        findRoute();
+        document.getElementById("goRouteButton").classList.add("currentRouteButton");
+        document.getElementById("backRouteButton").classList.remove("currentRouteButton");
     }
 
     return (

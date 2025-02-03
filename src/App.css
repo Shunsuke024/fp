@@ -20,7 +20,7 @@
   padding-left: 3px;
   padding-right: 3px;
 }
-.instructions {
+.instruction {
   text-align: left;
   width: 230px;
   height: 60px;
@@ -66,7 +66,6 @@
 }
 .sentences {
   display: flex;
-  /* flex-direction: column; */
 }
 .guideSentence {
   width: 150px;
@@ -129,10 +128,21 @@
   height: 40px;
   cursor: pointer;
 }
+.routeButton {
+  font-size: 12px;
+  width: 40px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.currentRouteButton {
+  background-color: aqua;
+}
 .change-btn {
   font-size: 15px;
   width: 100px;
   height: 40px;
+  margin-left: 5px;
 }
 #controls {
   text-align: right;
@@ -140,7 +150,6 @@
   margin-bottom: 5px;
 }
 .direction-btn {
-  font-size: 12px;
   width: 40px;
   height: 40px;
   border: 1px solid black;
