@@ -3,7 +3,6 @@ import "./App.css";
 import { Map } from "./components/Map";
 import { Reason } from "./components/Reason";
 import { Sentence } from "./components/Sentence";
-// import { GameKontra } from "./components/GameKontra";
 import { Game } from "./components/Game";
 
 export const App = () => {
@@ -201,7 +200,7 @@ export const App = () => {
   }
   
   // 経路表示関数
-  function findRoute() {
+  const findRoute = () => {
     const start = 0;
     const end = clearPosition;
     // 行きの経路
@@ -224,7 +223,7 @@ export const App = () => {
     setChangeMap(true);
     findRoute();
   }
-  function speak(text) {
+  const speak = (text) => {
     speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US"; // 英語に設定
@@ -272,7 +271,6 @@ export const App = () => {
       <div className="main1">
         <div className="map">
         {changeMap ?
-          // <GameKontra />
           <Game 
             positions={positions}
             moves={moves} 
