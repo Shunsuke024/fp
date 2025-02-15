@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Map } from "./components/Map";
 import { Reason } from "./components/Reason";
 import { Sentence } from "./components/Sentence";
 import { Game } from "./components/Game";
+import { applyFontFace } from './utils/fontLoader'; // フォント読込み処理を指定
 
 export const App = () => {
   const [instruction, setInstruction] = useState("好きな場所を選びましょう。");
   const [reasons, setReasons] = useState([]);
-  const [place, setPlace] = useState("This is my favorite place, the ~.");
+  const [place, setPlace] = useState("This is my favorite place, the .");
   const [sentences, setSentences] = useState([]);
   const [changeMap, setChangeMap] = useState(false);
   const [isGuide, setIsGuide] = useState(false);
@@ -96,29 +97,6 @@ export const App = () => {
     15: { down: 12 },
     16: { up: 13 },
   };
-
-  const createDropDown = () => {
-    const startSelect = document.getElementById("startSelect");
-    const endSelect = document.getElementById("endSelect");
-    if(!startSelect.lastChild) {
-      const optionStart = document.createElement("option");
-      optionStart.value = 0;
-      optionStart.text = positions[0].room;
-      startSelect.appendChild(optionStart);
-      const optionEnd = document.createElement("option");
-      optionEnd.value = clearPosition;
-      optionEnd.text = positions[clearPosition].room;
-      endSelect.appendChild(optionEnd);
-      // for (let i = 0; i < Object.keys(positions).length; i++) {    
-      //   if(positions[i].room){
-      //       const optionEnd = document.createElement("option");
-      //       optionEnd.value = i;
-      //       optionEnd.text = positions[i].room;
-      //       endSelect.appendChild(optionEnd);
-      //   }
-      // }
-    }
-  }
 
   const findPath = (start, end, dir) => {
     const queue = [{ position: start, path: [], dir: dir }];
@@ -265,6 +243,14 @@ export const App = () => {
     }
   }
   
+  useEffect(() => { // 初回（空指定[]）のuseEffect内でフォント適用を実行
+    const cleanup = applyFontFace(); // フォントを適用し、クリーンアップ関数を取得
+
+    return () => {
+      cleanup(); // アンマウント時にクリーンアップ実行
+    };
+  }, []);
+
   return (
     <div className="body">
     <div className="main">
@@ -281,7 +267,6 @@ export const App = () => {
             backGuideSentence={backGuideSentence}
             setGuideSentence={setGuideSentence}
             setBackGuideSentence={setBackGuideSentence}
-            createDropDown={createDropDown}
             setInstruction={setInstruction}
             speak={speak}
             findRoute={findRoute}
@@ -310,9 +295,7 @@ export const App = () => {
           {changeMap ?
           <>
             <div id="routeControls">
-              
-                <select id="startSelect"></select>から
-                <select id="endSelect"></select>
+                <p>{positions[0].room} から {positions[clearPosition].room}</p>
                 <div>
                   <button id="goRouteButton" className="routeButton eventNone currentRouteButton">行き</button>
                   <button id="backRouteButton" className="routeButton eventNone">帰り</button>

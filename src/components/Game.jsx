@@ -14,7 +14,6 @@ export const Game = (props) => {
         backGuideSentence, 
         setGuideSentence,
         setBackGuideSentence,
-        createDropDown,
         setInstruction,
         speak,
         findRoute,
@@ -102,7 +101,6 @@ export const Game = (props) => {
             drawArrow();
         }
         //関数
-        createDropDown();
         const drawMap = () => {
             ctx.drawImage(mapImage, 0, 0);
         }
