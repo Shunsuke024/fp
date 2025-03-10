@@ -220,7 +220,7 @@ export const App = () => {
   const onclickReset = () => {
     setInstruction("好きな場所を選ぶ。");
     setReasons([]);
-    setPlace("This is my favorite place, the ~.");
+    setPlace("This is my favorite place, the .");
     setSentences([]);
     setChangeMap(false);
     setIsGuide(false);
